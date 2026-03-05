@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запретка</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="top-stats-container">
+            <div id="setup-screen" class="setup-screen">
+                <div class="setup-title">Настройка игры</div>
+                <div class="setup-input-group">
+                    <label class="setup-label">Количество слов в раунде:</label>
+                    <select id="words-per-round" class="setup-input">
+                        <option value="5">5 слов</option>
+                        <option value="10">10 слов</option>
+                        <option value="15">15 слов</option>
+                        <option value="20" selected>20 слов</option> <option value="30">30 слов</option>
+                        <option value="50">50 слов</option>
+                    </select>
+                </div>
+                <button class="setup-button" onclick="startCountdown()">Начать игру</button>
+            </div>
+        </div>
+        <div class="game-container">
+            <div id="userInfo" style="display: none;"></div>
+            <div id="correctAnswer" style="display: none;"></div>
+          
+            <div id="active-game" style="display: none;">
+                <div id="roundCounter" style="text-align: center; margin-bottom: 20px; font-size: 1.2em; font-weight: bold; color: #666;"></div>
+                <div id="content"></div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="twitch-chat">
+                <div class="chat-messages" id="chatMessages"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modalText" class="modal-text"></div>
+            <button class="modal-button" onclick="nextWord()">Продолжить</button>
+        </div>
+    </div>
+
+    <div id="countdownOverlay" class="countdown-overlay">
+        <div id="countdownNumber" class="countdown-number"></div>
+    </div>
+
+    <div id="gameOverOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-text">🎮 Игра окончена!</div>
+            <button class="modal-button" onclick="restartGame()">🔄 Начать заново</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

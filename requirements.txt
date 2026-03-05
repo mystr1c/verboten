@@ -1,0 +1,6 @@
+Flask
+Flask-SocketIO
+websockets
+python-dotenv
+Flask-Session
+

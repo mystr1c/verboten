@@ -1,0 +1,470 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.main-container {
+    display: grid;
+    /* Определяем две колонки: левая гибкая, правая фиксированная (400px) */
+    grid-template-columns: 1fr 400px;
+    /* Определяем две строки: верхняя по контенту, нижняя забирает остаток */
+    grid-template-rows: auto 1fr; 
+    gap: 20px;
+    max-width: 1400px;
+    width: 100%;
+    /* Высота контейнера, чтобы чату было куда тянуться */
+    height: auto; 
+    align-items: stretch;
+}
+
+/* Новый верхний блок над игрой */
+.top-stats-container {
+    grid-column: 1 / 2; /* Первая колонка */
+    grid-row: 1 / 2;    /* Первая строка */
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.game-container {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    
+    /* Соотношение сторон */
+    aspect-ratio: 16 / 9;
+    
+    /* Заставляем контейнер вписываться в доступную ширину */
+    width: 100%;
+    
+    /* Важный момент: чтобы при низком окне браузера контейнер 
+    не уходил за границы экрана, ограничиваем его по высоте 
+    относительно родительской сетки */
+    max-height: 100%;
+    
+    /* Центрируем внутри колонки, если высота ограничила ширину */
+    margin: 0 auto;
+    
+    /* Для красоты: Flexbox поможет центрировать содержимое игры внутри 16:9 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chat-container {
+    grid-column: 2 / 3; /* Вторая колонка */
+    grid-row: 1 / 3;    /* Растягиваем с 1 по 3 линию (то есть на 2 строки) */
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+    border-radius: 15px;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #9146FF;
+}
+
+.user-name {
+    flex: 1;
+    font-weight: bold;
+    color: #333;
+}
+
+.logout-button {
+    padding: 8px 16px;
+    background: #9146FF;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.logout-button:hover {
+    background: #772ce8;
+    transform: scale(1.05);
+}
+
+.twitch-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow: hidden;
+    padding: 15px;
+    background: #18181b;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+}
+
+.chat-message {
+    padding: 8px 12px;
+    background: #1f1f23;
+    border-radius: 8px;
+    word-wrap: break-word;
+    max-width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.chat-username {
+    color: #adadb8;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.chat-text {
+    color: #efeff1;
+}
+
+.winner-message {
+    background: #ffd700 !important;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.winner-message .chat-username {
+    color: #333 !important;
+}
+
+.winner-message .chat-text {
+    color: #333 !important;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.word-display {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.timer-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.timer-line {
+    height: 100%;
+    background: linear-gradient(90deg, #fff, #ffd700);
+    width: 100%;
+    transition: width 0.1s linear;
+}
+
+.main-word {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.forbidden-label {
+    font-size: 1em;
+    opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+.forbidden-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.forbidden-word {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1.1em;
+    backdrop-filter: blur(10px);
+}
+
+.new-word-button {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.new-word-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.new-word-button:active {
+    transform: translateY(0);
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+
+.correct-answer {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-text {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.modal-button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.setup-screen {
+    text-align: center;
+}
+
+.setup-title {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.setup-input-group {
+    margin-bottom: 20px;
+}
+
+.setup-label {
+    display: block;
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.setup-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px 20px;
+    font-size: 1.2em;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    /* Добавляем эти свойства для селекта */
+    background-color: white;
+    cursor: pointer;
+    appearance: none; /* Убираем стандартную стрелочку, если хочешь кастомную */
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+}
+
+.setup-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+.setup-button {
+    padding: 15px 40px;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.setup-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.setup-button:active {
+    transform: translateY(0);
+}
+
+.countdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(102, 126, 234, 0.6);
+    backdrop-filter: blur(10px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.countdown-number {
+    font-size: 15em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+    animation: countdownPulse 1s ease-in-out;
+}
+
+@keyframes countdownPulse {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 1000px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chat-container {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
