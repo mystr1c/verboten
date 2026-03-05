@@ -12,14 +12,15 @@ async function checkAuth() {
         const response = await fetch('/api/user');
         const data = await response.json();
         
-        if (!data.authenticated) {
+        if (response.status !== 200) {
             window.location.href = '/login';
             return;
         }
         
-        showUserInfo(data.user);
+        showUserInfo(data.data.user);
         connectToUserChannel();
     } catch (error) {
+        console.error(error);
         window.location.href = '/login';
     }
 }
@@ -92,9 +93,9 @@ async function displayRandomWord() {
         if (!response.ok) throw new Error('Failed to load word');
         
         const data = await response.json();
-        currentWord = data.word;
+        currentWord = data.data.word;
         
-        const forbiddenHtml = data.forbidden.map(word => 
+        const forbiddenHtml = data.data.forbidden.map(word => 
             `<span class="forbidden-word">${word}</span>`
         ).join('');
         
@@ -102,7 +103,7 @@ async function displayRandomWord() {
         
         document.getElementById('content').innerHTML = `
             <div class="word-display">
-                <div class="main-word">${data.word}</div>
+                <div class="main-word">${currentWord}</div>
                 <div class="forbidden-label">🚫 ЗАПРЕЩЕННЫЕ СЛОВА:</div>
                 <div class="forbidden-words">
                     ${forbiddenHtml}
@@ -140,7 +141,7 @@ async function connectToUserChannel() {
         if (response.status !== 200) return;
         
         const data = await response.json();
-        const channel = data.channel.toLowerCase();
+        const channel = data.data.channel.toLowerCase();
         
         if (currentChannel === channel && socket && socket.connected) return;
         
