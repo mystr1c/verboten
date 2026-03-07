@@ -168,10 +168,10 @@ async function connectToUserChannel() {
         });
 
         socket.on('chat_message', function(data) {
-            const msgId = `${data.username}-${data.text}-${messageIdCounter++}`;
+            const msgId = `${data.message.username}-${data.message.text}-${messageIdCounter++}`;
             if (!messageIds.has(msgId)) {
                 messageIds.add(msgId);
-                addChatMessage(data.username, data.text);
+                addChatMessage(data.message.username, data.message.text);
             }
         });
 

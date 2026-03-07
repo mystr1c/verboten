@@ -8,6 +8,8 @@ from app.routes.api import api_bp
 
 socketio = SocketIO()
 
+from app.sockets import twitch_chat
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
