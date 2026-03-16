@@ -119,5 +119,5 @@ export function startCountdown() {
 }
 
 export function stopGame() {
-    clearTimeout(gameTimer)
+    clearInterval(gameTimer)
 }
