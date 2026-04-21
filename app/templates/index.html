@@ -15,32 +15,34 @@
     <div class="main-container">
         <div class="top-stats-container">
             <div id="setupScreen" class="setup-screen">
+                <!-- <div class="setup-title">Настройка игры</div> -->
+                <div class="setup-inputs-row">
+                    <div class="setup-input-group">
+                        <label class="setup-label">Количество слов:</label>
+                        <select id="wordsPerGame" class="setup-input">
+                            <option value="5">5 слов</option>
+                            <option value="10">10 слов</option>
+                            <option value="15">15 слов</option>
+                            <option value="20" selected>20 слов</option> 
+                            <option value="30">30 слов</option>
+                            <option value="50">50 слов</option>
+                        </select>
+                    </div>
 
-                <div class="setup-title">Настройка игры</div>
-                <div class="setup-input-group">
-                    <label class="setup-label">Количество слов:</label>
-                    <select id="wordsPerGame" class="setup-input">
-                        <option value="5">5 слов</option>
-                        <option value="10">10 слов</option>
-                        <option value="15">15 слов</option>
-                        <option value="20" selected>20 слов</option> 
-                        <option value="30">30 слов</option>
-                        <option value="50">50 слов</option>
-                    </select>
+                    <div class="setup-input-group">
+                        <label class="setup-label">Количество секунд:</label>
+                        <select id="secondsPerRound" class="setup-input">
+                            <option value="30" selected>30 сек.</option>
+                            <option value="45">45 сек.</option>
+                            <option value="60">60 сек.</option>
+                            <option value="90">90 сек.</option> 
+                        </select>
+                    </div>
                 </div>
-
-                <div class="setup-input-group">
-                    <label class="setup-label">Количество секунд:</label>
-                    <select id="secondsPerRound" class="setup-input">
-                        <option value="5">30 сек.</option>
-                        <option value="10">45 сек.</option>
-                        <option value="15" selected>60 сек.</option>
-                        <option value="20">90 сек.</option> 
-                    </select>
-                </div>
-
-                <button id="startButton" class="default-button">Начать игру</button>
-                <a href="/logout" class="default-button link-button">Выйти</a>
+                <button id="startButton" class="default-button">Начать</button>
+                <form action="/logout" method="POST" class="inline-form">
+                    <button type="submit" class="default-button">Выйти</button>
+                </form>
             </div>
         </div>
         <div class="game-container">
@@ -48,7 +50,8 @@
             <div id="correctAnswer" style="display: none;"></div>
           
             <div id="activeGame" style="display: none;">
-                <div id="roundCounter" style="text-align: center; margin-bottom: 20px; font-size: 1.2em; font-weight: bold; color: #666;"></div>
+                <div id="roundCounter" class="forbidden-label" style="text-align: center;"></div> 
+                <!-- тут пока не тот класс, надо исправить -->
                 <div id="content"></div>
             </div>
         </div>

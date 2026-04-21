@@ -1,19 +1,22 @@
-from dotenv import load_dotenv
-import os
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-load_dotenv(dotenv_path="env.config")
+class Settings(BaseSettings):
+    SECRET_KEY: str
 
-class Config:
-    SECRET_KEY =  os.environ.get('SECRET_KEY')
+    SESSION_TYPE: str = "filesystem"
+    SESSION_FILE_DIR: str = 'flask_session'
+    SESSION_PERMANENT: bool = False
+    SESSION_USE_SIGNER: bool = True
 
-    SESSION_TYPE = "filesystem"
-    SESSION_FILE_DIR = 'flask_session'
-    SESSION_PERMANENT = False
-    SESSION_USE_SIGNER = True
+    TWITCH_IRC_URI: str = 'wss://irc-ws.chat.twitch.tv:443'
 
-    TWITCH_IRC_URI = 'wss://irc-ws.chat.twitch.tv:443'
+    TWITCH_CLIENT_ID: str 
+    TWITCH_CLIENT_SECRET: str
+    TWITCH_REDIRECT_URI: str
+    TWITCH_OAUTH_SCOPES: str = 'user:read:chat'
 
-    TWITCH_CLIENT_ID =  os.environ.get('TWITCH_CLIENT_ID')
-    TWITCH_CLIENT_SECRET =  os.environ.get('TWITCH_CLIENT_SECRET')
-    TWITCH_REDIRECT_URI = os.getenv('TWITCH_REDIRECT_URI')
-    TWITCH_OAUTH_SCOPES = os.getenv('TWITCH_OAUTH_SCOPES', 'user:read:chat')
+    DB_CONNECT: str
+
+    model_config = SettingsConfigDict(env_file=".env", extra='ignore')
+
+settings = Settings()

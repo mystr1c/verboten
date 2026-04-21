@@ -1,6 +1,6 @@
 import threading
 import asyncio
-from app.config import Config
+from app.config import settings
 import websockets
 import time
 
@@ -23,7 +23,7 @@ def parse_twitch_message(message):
     return {'username': username, 'text': text} if text else None
 
 async def connect_to_twitch(channel: str, stop_event: threading.Event, callback):
-    uri = Config.TWITCH_IRC_URI
+    uri = settings.TWITCH_IRC_URI
 
     try:
         async with websockets.connect(uri) as websocket:
@@ -88,4 +88,3 @@ def stop_twitch_connection(channel: str):
         if not conn:
             return
         conn['stop_event'].set()
-        

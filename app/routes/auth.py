@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, url_for, render_template, session, request
-from app.config import Config
+from app.config import settings
+from app.services.streamer import get_or_create_streamer
 import requests
 
 auth_bp = Blueprint('auth', __name__)
@@ -8,16 +9,16 @@ auth_bp = Blueprint('auth', __name__)
 def login():
     return render_template('login.html')
 
-@auth_bp.route('/logout')
+@auth_bp.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     return redirect(url_for('auth.login'))
 
 @auth_bp.route('/auth/twitch')
 def auth_twitch():
-    client_id = Config.TWITCH_CLIENT_ID
-    redirect_uri = Config.TWITCH_REDIRECT_URI
-    scopes = Config.TWITCH_OAUTH_SCOPES
+    client_id = settings.TWITCH_CLIENT_ID
+    redirect_uri = settings.TWITCH_REDIRECT_URI
+    scopes = settings.TWITCH_OAUTH_SCOPES
 
     auth_url = f'https://id.twitch.tv/oauth2/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code&scope={scopes}'
     return redirect(auth_url)
@@ -30,9 +31,9 @@ def callback():
     if not code:
         return redirect(url_for('auth.login'))
     
-    client_id = Config.TWITCH_CLIENT_ID
-    redirect_uri = Config.TWITCH_REDIRECT_URI
-    client_secret = Config.TWITCH_CLIENT_SECRET
+    client_id = settings.TWITCH_CLIENT_ID
+    redirect_uri = settings.TWITCH_REDIRECT_URI
+    client_secret = settings.TWITCH_CLIENT_SECRET
 
     token_url = 'https://id.twitch.tv/oauth2/token'
 
@@ -65,14 +66,15 @@ def callback():
     
     user_data = user_response.json()
     user_info = user_data['data'][0]
-
+    user_db_id = get_or_create_streamer(user_info['login'])
+    
     session['user'] = {
         'id': user_info['id'],
+        'db_id': user_db_id,
         'login': user_info['login'],
         'display_name': user_info['display_name'],
         'profile_image_url': user_info['profile_image_url']
     }
     session['access_token'] = access_token
-
-
+    
     return redirect(url_for('main.index'))

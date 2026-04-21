@@ -11,7 +11,7 @@ export async function checkAuth() {
             return;
         }
         
-        showUserInfo(data.data.user);
+        // showUserInfo(data.data.user);
         connectToUserChannel();
     } catch (error) {
         console.error(error);

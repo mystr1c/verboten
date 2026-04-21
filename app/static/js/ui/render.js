@@ -1,3 +1,5 @@
+import { game_id, currentWord, leaderboard, addPoints } from "../game/state.js";
+
 export function showUserInfo(user) {
     document.getElementById('userInfo').innerHTML = `
         <div class="user-info">
@@ -14,6 +16,15 @@ export function showCorrectAnswer(username) {
     
     modalText.textContent = `${username} угадал слово!`;
     modalOverlay.style.display = 'flex';
+
+    addPoints(username)
+
+    fetch(`/api/leaderboard/${game_id}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({'nickname': username})
+    })
+    updateWordStatus()
 }
 
 export function showGameOver() {
@@ -22,9 +33,19 @@ export function showGameOver() {
     
     modalText.textContent = 'Увы, время вышло!';
     modalOverlay.style.display = 'flex';
+
+    updateWordStatus()
 }
 
 export function showEndGame() {
     const gameOverOverlay = document.getElementById('endGameScreen');
     gameOverOverlay.style.display = 'flex';
+}
+
+function updateWordStatus() {
+    fetch(`/api/word/${game_id}/${currentWord}`, {
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({'status': 'finished'})
+    })
 }

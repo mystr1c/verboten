@@ -1,5 +1,5 @@
 import { showEndGame, showGameOver } from '../ui/render.js'
-import { maxRounds, currentRound, currentWord, setCurrentRound, setCurrentWord, setMaxRounds } from './state.js'
+import { game_id, setGameId, maxRounds, timer_limit, setTimerLimit, currentRound, currentWord, setCurrentRound, setCurrentWord, setMaxRounds, clearLeaderboard } from './state.js'
 
 let gameTimer = null;
 
@@ -8,6 +8,11 @@ async function displayRandomWord() {
 
     if (currentRound > maxRounds) {
         showEndGame();
+        fetch(`/api/game/${game_id}`,{
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({'status': 'finished'})
+        })
         return;
     }
 
@@ -21,7 +26,7 @@ async function displayRandomWord() {
     });
 
     try {
-        const response = await fetch('/api/word');
+        const response = await fetch(`/api/word/${game_id}`)
         if (!response.ok) throw new Error('Failed to load word');
         
         const data = await response.json();
@@ -47,11 +52,11 @@ async function displayRandomWord() {
         `;
         
         const timerLine = document.getElementById('timerLine');
-        let remainingTime = 30;
+        let remainingTime = timer_limit;
         
         gameTimer = setInterval(() => {
             remainingTime -= 0.1;
-            const percentage = (remainingTime / 30) * 100;
+            const percentage = (remainingTime / timer_limit) * 100;
             timerLine.style.width = percentage + '%';
             
             if (remainingTime <= 0) {
@@ -89,9 +94,14 @@ export function restartGame() {
     });
 }
 
-export function startCountdown() {
+export async function startCountdown() {
     const wordsInput = document.getElementById('wordsPerGame');
+    const timerInput = document.getElementById('secondsPerRound');
+    
     setMaxRounds(parseInt(wordsInput.value) || 5);
+    setTimerLimit(parseInt(timerInput.value) || 30)
+    clearLeaderboard();
+
     setCurrentRound(0);
 
     const countdownOverlay = document.getElementById('countdownOverlay');
@@ -100,7 +110,16 @@ export function startCountdown() {
 
     countdownOverlay.style.display = 'flex';
     countdownNumber.textContent = count;
+    const response = await fetch('/api/game', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({'round_limit':maxRounds, 'time_limit': timer_limit})
+    });
 
+    const data = await response.json()
+
+    setGameId(data.data.game_id)
+    
     const countdownInterval = setInterval(() => {
         count--;
         if (count > 0) {
