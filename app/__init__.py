@@ -5,7 +5,6 @@ from app.config import settings
 from app.routes.main import main_bp
 from app.routes.auth import auth_bp
 from app.routes.api import api_bp
-from app.database import init_db
 
 socketio = SocketIO()
 
@@ -18,8 +17,6 @@ def create_app(config_class=settings):
 
     Session(app)
     socketio.init_app(app)
-
-    init_db()
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)

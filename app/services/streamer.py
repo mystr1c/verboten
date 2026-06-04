@@ -4,7 +4,7 @@ from sqlalchemy import select
 
 def get_or_create_streamer(username:str) -> int:
     with session_factory() as session:
-        streamer = session.execute(select(StreamerORM).filter_by(username=username)).one_or_none()
+        streamer = session.execute(select(StreamerORM).filter_by(username=username)).scalar_one_or_none()
         if not streamer:
             streamer = StreamerORM(
                 username=username
